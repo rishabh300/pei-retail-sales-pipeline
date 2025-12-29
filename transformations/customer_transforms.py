@@ -2,11 +2,6 @@ import pyspark.sql.functions as f
 from delta.tables import DeltaTable
 
 def enrich_customers(df): 
-    CUSTOMER_TARGET_COLUMNS = [
-    "customer_id", "customer_name", "first_name", "last_name", "email", 
-    "phone", "address", "segment", "country", "city", "state", 
-    "postal_code", "region", "file_path", "ingestion_timestamp", "processing_timestamp"
-    ]
     enriched_df = (
         df
         # Standardize customer name
@@ -31,7 +26,7 @@ def enrich_customers(df):
         .withColumn("processing_timestamp", f.current_timestamp())
     )
 
-    return enriched_df.select(*CUSTOMER_TARGET_COLUMNS)
+    return enriched_df
 
 
 def upsert(spark_session, df, target_table_name): 
