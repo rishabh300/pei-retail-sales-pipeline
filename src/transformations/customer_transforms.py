@@ -1,7 +1,7 @@
 import pyspark.sql.functions as f
 from delta.tables import DeltaTable
 
-def enrich_customers(df): 
+def transform_customers(df): 
     enriched_df = (
         df
         # Standardize customer name
@@ -29,7 +29,24 @@ def enrich_customers(df):
     return enriched_df
 
 
-def upsert(spark_session, df, target_table_name): 
+def upsert_customer(spark_session, df, target_table_name): 
+    """
+    Performs an idempotent Upsert (MERGE) into the Customer Silver table.
+    
+    This function implements a Slowing Changing Dimension (SCD) Type 1 pattern, 
+    overwriting existing records with the latest source attributes and inserting 
+    new records.
+
+    Args:
+        spark_session (SparkSession): The active Spark session.
+        df (DataFrame): The enriched source DataFrame containing deduplicated 
+            customer records.
+        target_table_name (str): The fully qualified Delta table name 
+            (catalog.schema.table).
+
+    Returns:
+        None: The function executes the MERGE operation in-place on the target table.
+    """
     target_table = DeltaTable.forName(spark_session, target_table_name)
 
     (
