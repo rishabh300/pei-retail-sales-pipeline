@@ -6,17 +6,36 @@ from pyspark.sql import DataFrame
 def standardize_customer_names(
     df: DataFrame
     ) -> DataFrame:
-    """Standardizes names by trimming and removing special characters."""
+    """Standardizes names by removing special characters first, then extracting parts.
+    """
     return (
-        df.withColumn("customer_name", f.trim(f.regexp_replace(f.col("customer_name"), r"\s+", " ")))
+        df.withColumn("customer_name", f.trim(f.col("customer_name")))
+        # Remove all non-alphabetic characters (except spaces)
+        .withColumn("customer_name", f.regexp_replace(f.col("customer_name"), r"[^A-Za-z\s]", ""))
+        # Collapse multiple spaces to single space
+        .withColumn("customer_name", f.regexp_replace(f.col("customer_name"), r"\s+", " "))
+        # Trim again after space collapse
+        .withColumn("customer_name", f.trim(f.col("customer_name")))
+        # Split into parts for first and last name extraction
         .withColumn("name_parts", f.split(f.col("customer_name"), " "))
-        .withColumn("first_name", f.regexp_replace(f.col("name_parts").getItem(0), r"[^A-Za-z]", ""))
-        .withColumn("last_name", 
-            f.when(f.size(f.col("name_parts")) > 1, 
-                   f.regexp_replace(f.col("name_parts").getItem(1), r"[^A-Za-z]", ""))
-            .otherwise(None)
+        # Extract first name (first non-empty part)
+        .withColumn("first_name", 
+            f.when(f.size(f.col("name_parts")) > 0, f.coalesce(f.col("name_parts").getItem(0), f.lit("")))
+            .otherwise(f.lit(""))
         )
-        .withColumn("customer_name", f.concat_ws(" ", f.col("first_name"), f.col("last_name")))
+        # Extract last name (second non-empty part)
+        .withColumn("last_name", 
+            f.when(f.size(f.col("name_parts")) > 1, f.coalesce(f.col("name_parts").getItem(1), f.lit("")))
+            .otherwise(f.lit(""))
+        )
+        # Ensure we never have blank customer_name by checking both parts
+        .withColumn("customer_name", 
+            f.when(
+                (f.length(f.col("first_name")) > 0) | (f.length(f.col("last_name")) > 0),
+                f.trim(f.concat_ws(" ", f.col("first_name"), f.col("last_name")))
+            ).otherwise(None)
+        )
+        .withColumn("customer_name", f.initcap(f.col("customer_name")))
         .drop("name_parts")
     )
 
