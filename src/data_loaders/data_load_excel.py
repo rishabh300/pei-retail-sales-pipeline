@@ -1,4 +1,9 @@
-def load_raw_data(spark_session, file_path): 
+from pyspark.sql import DataFrame, SparkSession
+
+def load_raw_data(
+    spark_session: SparkSession, 
+    file_path: str
+    ) -> DataFrame: 
     """
     Performs a batch read of an Excel spreadsheet from the specified path.
 

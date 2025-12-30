@@ -1,6 +1,13 @@
 import pyspark.sql.functions as f 
+from pyspark.sql import DataFrame, SparkSession
+from typing import Dict, Any
 
-def load_raw_data_with_schema_evolution(spark_session, source_path, file_format, additional_options={}):
+def load_raw_data_with_schema_evolution(
+    spark_session: SparkSession, 
+    source_path: str, 
+    file_format: str, 
+    additional_options: Dict[str, Any] = {}
+    ) -> DataFrame:
     """
     Initializes a structured stream to ingest raw data using Databricks AutoLoader (cloudFiles).
 
