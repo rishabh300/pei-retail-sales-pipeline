@@ -23,7 +23,10 @@ def add_partition_columns(
     df: DataFrame
     ) -> DataFrame:
     """Calculates partition keys based on business dates."""
-    return df.withColumn("year_month", f.date_format(f.col("order_date"), "yyyy-MM"))
+    return (
+        df.withColumn("year_month", f.date_format(f.col("order_date"), "yyyy-MM"))
+        .withColumn("order_year", f.year(f.col("order_date")).cast("int"))
+    )
 
 
 def apply_order_quality_rules(
@@ -78,6 +81,7 @@ def enrich_order_data(
         # Apply the "Unknown" labels for missing dimension keys
         .withColumn("category", f.coalesce(f.col("category"), f.lit("Unknown Category")))
         .withColumn("sub_category", f.coalesce(f.col("sub_category"), f.lit("Unknown Sub-Category")))
+        .withColumn("customer_name", f.coalesce(f.col("customer_name"), f.lit("Unknown Customer")))
     )
 
 
