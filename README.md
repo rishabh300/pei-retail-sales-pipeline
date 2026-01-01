@@ -1,7 +1,7 @@
 # pei-retail-sales-pipeline
 This is an assessment project to design and implement a data processing system using Databricks for an e-commerce platform.
 
-🏗️ Architecture
+# 🏗️ Architecture
 The pipeline follows the medallion architecture pattern:
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
 │   Bronze    │ ──> │   Silver    │ ──> │    Gold     │
@@ -13,7 +13,7 @@ Silver Layer: Data cleansing, validation, and enrichment
 Gold Layer: Business-level aggregations and analytics
 
 
-📁 Project Structure
+# 📁 Project Structure
 pei-retail-sales-pipeline/
 │
 ├── init/                          # Setup and initialization scripts
@@ -35,7 +35,7 @@ pei-retail-sales-pipeline/
 └── README.md                    # This file
 
 
-Prerequisites
+# Prerequisites
 
 Databricks workspace (Community Edition or Enterprise)
 Python 3.11.9
