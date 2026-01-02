@@ -51,9 +51,9 @@ pei-retail-sales-pipeline/
 
 | Notebook | Layer | Purpose |
 |----------|-------|---------|
-| 01_ingestion.ipynb | Bronze | Raw data ingestion from sources |
-| 02_enrichment.ipynb | Silver | Data cleansing and enrichment |
-| 03_business.ipynb | Gold | Business metrics and analytics |
+| ingestion.ipynb | Bronze | Raw data ingestion from sources |
+| enrichment.ipynb | Silver | Data cleansing and enrichment |
+| business.ipynb | Gold | Business metrics and analytics |
 
 
 ## Running the Pipeline
