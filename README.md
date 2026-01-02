@@ -19,9 +19,9 @@ pei-retail-sales-pipeline/
 │
 ├── src/                       Source code
 │   ├── notebooks/            Databricks notebooks
-│   │   ├── 01_ingestion.ipynb       Bronze layer - Data ingestion
-│   │   ├── 02_enrichment.ipynb      Silver layer - Data enrichment
-│   │   └── 03_business.ipynb        Gold layer - Business metrics
+│   │   ├── ingestion.ipynb       Bronze layer - Data ingestion
+│   │   ├── enrichment.ipynb      Silver layer - Data enrichment
+│   │   └── business.ipynb        Gold layer - Business metrics
 │   └── utils/                Utility functions and helpers
 │
 ├── tests/                     Test suite
